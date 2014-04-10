@@ -20,7 +20,7 @@ void sigHandler(int signo) {
   {
     for (j = 0; j < 3; j++)
     {
-		printf("%d\n", pidsAux[i]);
+		//printf("%d\n", pidsAux[i]);
       kill(-pidsAux[i],SIGINT);
     }
   }
