@@ -69,7 +69,8 @@ void* filterThread(void* arg) {
 
 		//creates the other filter thread of the sequence
 		pthread_t filtThread;
-		pthread_create(&filtThread, 0, filterThread, output);
+		if(pthread_create(&filtThread, 0, filterThread, output) != 0)
+			printf("Error creating filter thread\n");
 
 		//checks if the rest of the number aren't multiples of the temporary variable
 		do {
@@ -104,7 +105,8 @@ void* initialThread(void* arg){
 
 		//creates the filter thread
 		pthread_t filtThread;
-		pthread_create(&filtThread, 0, filterThread, output);
+		if (pthread_create(&filtThread, 0, filterThread, output) != 0)
+			printf("Error creating filter thread\n");
 
 		//only the odd numbers are added to the output queue
 		int i;
@@ -129,6 +131,7 @@ int main(int argc, char** argv) {
 	//converting argument (string) to long int
 	char* pEnd;
 	n = strtol(argv[1], &pEnd, 10);
+	//checks if the argument is invalid
 	if (pEnd == argv[1] || n < 2) {
 		printf("Argument invalid.\n");
 		return -1;
@@ -145,7 +148,8 @@ int main(int argc, char** argv) {
 	
 	//creates the initial thread
 	pthread_t iniThread;
-	pthread_create(&iniThread, 0, initialThread, 0);
+	if (pthread_create(&iniThread, 0, initialThread, 0) != 0)
+		printf("Error creating initial thread\n");
 
 	//waiting for termination semaphore
 	sem_wait(&termination);
@@ -153,6 +157,8 @@ int main(int argc, char** argv) {
 	//sort primes list
 	qsort(primesList, primesListSize, sizeof(unsigned long), cmpfunc);
 
+	setbuf(stdout, NULL);
+	
 	showPrimesList();
 
 	return 0;
